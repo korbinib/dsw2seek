@@ -4,12 +4,20 @@ from waitress import serve
 app = Flask(__name__)
 
 
-@app.route("/")
+@app.route('/')
 def index():
     '''
     Home page.
     '''
     return render_template('./index.html')
+
+
+@app.route('/upload')
+def upload():
+    '''
+    Upload page.
+    '''
+    return render_template('./upload.html', error="There was an error uploading your file. Please try again.")
 
 
 if __name__ == '__main__':
