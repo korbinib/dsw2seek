@@ -2,15 +2,15 @@
 
 ## Project overview
 
-dsw2seek is a python web application that transfers Data Management Plans (DMPs) from DSW to FAIRDOM-SEEK.
+dsw2seek is a python web application that uses Data Management Plans (DMPs) from DSW to create projects in FAIRDOM-SEEK.
 
 ## Important resources
 
-DSW test environment: https://dsw-test.elixir.no/
+DSW test environment: https://dsw-test.elixir.no/ \
 DSW SDK: https://github.com/ds-wizard/dsw-sdk
 
-Seek API documentation: https://docs.seek4science.org/tech/api/
-Examples using the Seek API: https://docs.seek4science.org/help/user-guide/api.html
+Seek API documentation: https://docs.seek4science.org/tech/api/ \
+Examples using the Seek API: https://docs.seek4science.org/help/user-guide/api.html \
 Seek for Docker: https://docs.seek4science.org/tech/docker
 
 ## Seek API
@@ -25,4 +25,21 @@ Authorization: Basic <credentials>
 Content-Type: application/vnd.api+json
 ```
 
-The authorization credentials are the base64-encoding of the string "<username>:<password>".
+The authorization credentials are the base64-encoding of the string `<username>:<password>`.
+
+## Docker
+
+First, create the following 4 volumes in Docker:
+
+```
+docker volume create --name=seek-filestore
+docker volume create --name=seek-mysql-db
+docker volume create --name=seek-solr-data
+docker volume create --name=seek-cache
+```
+
+Run `docker-compose` in the root directory of this project:
+
+```
+docker-compose -f docker/docker-compose.yml up
+```
