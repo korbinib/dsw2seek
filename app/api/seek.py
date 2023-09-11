@@ -1,5 +1,12 @@
 import requests
 import json
+import os
+import base64
+from dotenv import load_dotenv
+
+load_dotenv()
+SEEK_USERNAME = os.environ.get("SEEK_USERNAME")
+SEEK_PASSWORD = os.environ.get("SEEK_PASSWORD")
 
 
 class SeekClient:
@@ -8,7 +15,7 @@ class SeekClient:
         self.headers = {
             'Accept': 'application/vnd.api+json',
             'Accept-Charset': 'ISO-8859-1',
-            'Authorization': 'Basic bWVuamFiaW46MTIzNDU2Nzg5MTA=',
+            'Authorization': f'Basic {base64.b64encode(bytes(f"{SEEK_USERNAME}:{SEEK_PASSWORD}", "utf-8"))}',
             'Content-Type': 'application/vnd.api+json'
         }
 

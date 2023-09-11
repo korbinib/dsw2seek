@@ -19,7 +19,6 @@ def upload():
     '''
     Upload page.
     '''
-    # response = client.create_person()
     return render_template('./upload.html', error="There was an error uploading your file. Please try again.")
 
 
