@@ -1,1 +1,5 @@
-.vscode
+# temporary files
+__pycache__
+
+# environment variables
+.env

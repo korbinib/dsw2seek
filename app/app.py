@@ -1,7 +1,9 @@
 from flask import Flask, render_template
 from waitress import serve
+from api.seek import SeekClient
 
 app = Flask(__name__)
+client = SeekClient()
 
 @app.route('/')
 def index():
