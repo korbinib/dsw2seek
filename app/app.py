@@ -12,7 +12,7 @@ def index():
     return render_template('./index.html')
 
 
-@app.route('/upload')
+@app.route('/upload', methods=['POST'])
 def upload():
     '''
     Upload page.
