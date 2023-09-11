@@ -1,7 +1,9 @@
 from flask import Flask, render_template
 from waitress import serve
+from api.seek import SeekClient
 
 app = Flask(__name__)
+client = SeekClient()
 
 
 @app.route('/')
@@ -17,6 +19,7 @@ def upload():
     '''
     Upload page.
     '''
+    # response = client.create_person()
     return render_template('./upload.html', error="There was an error uploading your file. Please try again.")
 
 
