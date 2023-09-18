@@ -21,6 +21,70 @@ class SeekClient:
             'Content-Type': 'application/vnd.api+json'
         }
 
+    def create_project(self):
+        '''
+        Create a new project
+        '''
+        data = {
+            "data": {
+                "type": "projects",
+                "attributes": {
+                    "avatar": null,
+                    "title": "Post Project Max",
+                    "description": "A Taverna project",
+                    "web_page": "http://www.taverna.org.uk",
+                    "wiki_page": "http://www.mygrid.org.uk",
+                    "default_license": "Other (Open)",
+                    "default_policy": {
+                        "access": "no_access",
+                        "permissions": [
+                            {
+                                "resource": {
+                                    "id": "1273",
+                                    "type": "people"
+                                },
+                                "access": "manage"
+                            },
+                            {
+                                "resource": {
+                                    "id": "1924",
+                                    "type": "projects"
+                                },
+                                "access": "download"
+                            },
+                            {
+                                "resource": {
+                                    "id": "1297",
+                                    "type": "institutions"
+                                },
+                                "access": "view"
+                            }
+                        ]
+                    }
+                },
+                "relationships": {
+                    "programmes": {
+                        "data": [
+                            {
+                                "id": "27",
+                                "type": "programmes"
+                            }
+                        ]
+                    },
+                    "organisms": {
+                        "data": [
+                            {
+                                "id": "5",
+                                "type": "organisms"
+                            }
+                        ]
+                    }
+                }
+            }
+        }
+        return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
+
+
     def get_people(self):
         '''
         Return all registered people in the SEEK system.
