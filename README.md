@@ -15,6 +15,14 @@ Seek for Docker: https://docs.seek4science.org/tech/docker
 
 ## Project setup
 
+### Python packages
+
+Navigate to the project directory and run:
+
+```
+pip install -r requirements.txt
+```
+
 ### Docker
 
 First, create the following 4 volumes in Docker:

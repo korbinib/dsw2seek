@@ -1,8 +1,8 @@
 import requests
-import json
 import os
 import base64
 from dotenv import load_dotenv
+
 
 load_dotenv()
 SEEK_USERNAME = os.environ.get("SEEK_USERNAME")
@@ -12,10 +12,12 @@ SEEK_PASSWORD = os.environ.get("SEEK_PASSWORD")
 class SeekClient:
     def __init__(self):
         self.base_url = 'http://localhost:3000'
+        auth = base64.b64encode(
+            f"{SEEK_USERNAME}:{SEEK_PASSWORD}".encode()).decode()
         self.headers = {
             'Accept': 'application/vnd.api+json',
             'Accept-Charset': 'ISO-8859-1',
-            'Authorization': f'Basic {base64.b64encode(bytes(f"{SEEK_USERNAME}:{SEEK_PASSWORD}", "utf-8"))}',
+            'Authorization': f'Basic {auth}',
             'Content-Type': 'application/vnd.api+json'
         }
 
@@ -30,30 +32,24 @@ class SeekClient:
         '''
         Create a new person in the SEEK system.
         '''
-        data = json.dumps({
+        data = {
             "data": {
                 "type": "people",
                 "attributes": {
                     "first_name": "Post",
                     "last_name": "Last",
-                    "email": "maxPosttest264@test.com",
-                    "description": "A person with all possible details",
-                    "web_page": "http://www.website.com",
-                    "orcid": "http://orcid.org/0000-0001-9842-9718",
-                    "phone": "34-167-552266",
-                    "skype_name": "postedSkype",
-                    "expertise": [
-                        "modeling",
-                        "programming"
-                    ],
-                    "tools": [
-                        "CeriusII",
-                        "Gromacs",
-                        "Python"
-                    ]
+                    "email": "maxPosttest1154@test.com"
                 }
             }
-        })
+        }
 
-        return requests.post(
-            f'{self.base_url}/people', headers=self.headers, data=data)
+        return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
+
+
+if __name__ == '__main__':
+    client = SeekClient()
+    # assert (client.get_people().status_code == 200)
+    res = client.create_person()
+    print(res.content)
+    print(res.status_code)
+    # assert (client.create_person().status_code == 201)

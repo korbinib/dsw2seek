@@ -5,6 +5,7 @@ from api.seek import SeekClient
 app = Flask(__name__)
 client = SeekClient()
 
+
 @app.route('/')
 def index():
     '''
