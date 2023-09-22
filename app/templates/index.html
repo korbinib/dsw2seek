@@ -6,11 +6,11 @@
     <title>dsw2seek</title>
 
     <h1>Upload project</h1>
-    <form id="uploadForm" action="./upload" method="post">
+    <form id="uploadForm" action="./upload" method="post" enctype="multipart/form-data">
       <label for="title">Title:</label> 
       <input type="text" id="title" name="title" required> 
       <label for="jsonFile">Select a JSON file:</label> 
-      <input type="file" id="jsonFile" name="jsonFile" accept=".json" required>
+      <input type="file" id="jsonFileId" name="jsonFile" accept=".json" required>
       <br><br>
       <input type="submit" value="Upload">
     </form>

@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+import json
+from flask import Flask, render_template, request
 from waitress import serve
 from api.seek import SeekClient
 
@@ -19,6 +20,10 @@ def upload():
     '''
     Upload page.
     '''
+    if request.method == 'POST':
+        file = request.files['jsonFile']
+        y = json.load(file)
+        print(y["createdBy"]["email"])
     return render_template('./upload.html', error="There was an error uploading your file. Please try again.")
 
 
