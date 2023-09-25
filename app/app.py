@@ -20,11 +20,16 @@ def upload():
     '''
     Upload page.
     '''
-    if request.method == 'POST':
-        file = request.files['jsonFile']
-        y = json.load(file)
-        print(y["createdBy"]["email"])
-    return render_template('./upload.html', error="There was an error uploading your file. Please try again.")
+    try: #loading the upload screen without errors
+        if request.method == 'POST':
+            file = request.files['jsonFile']
+            y = json.load(file)
+            print(y["createdBy"]["email"])
+        return render_template('./upload.html', error=None)
+    except  Exception as e: #catching the errors and logging them
+        #printing the error for debugging purposes
+        print(f"An error occurred: {e}")
+        return render_template('./upload.html', error="There was an error uploading your file. Please try again.")
 
 
 if __name__ == '__main__':
