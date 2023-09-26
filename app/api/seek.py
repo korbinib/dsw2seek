@@ -21,7 +21,7 @@ class SeekClient:
             'Content-Type': 'application/vnd.api+json'
         }
 
-    def create_project(self):
+    def create_project(self, title):
         '''
         Create a new project
         '''
@@ -29,70 +29,20 @@ class SeekClient:
             "data": {
                 "type": "projects",
                 "attributes": {
-                    "avatar": null,
-                    "title": "Post Project Max",
-                    "description": "A Taverna project",
-                    "web_page": "http://www.taverna.org.uk",
-                    "wiki_page": "http://www.mygrid.org.uk",
-                    "default_license": "Other (Open)",
-                    "default_policy": {
-                        "access": "no_access",
-                        "permissions": [
-                            {
-                                "resource": {
-                                    "id": "1273",
-                                    "type": "people"
-                                },
-                                "access": "manage"
-                            },
-                            {
-                                "resource": {
-                                    "id": "1924",
-                                    "type": "projects"
-                                },
-                                "access": "download"
-                            },
-                            {
-                                "resource": {
-                                    "id": "1297",
-                                    "type": "institutions"
-                                },
-                                "access": "view"
-                            }
-                        ]
-                    }
-                },
-                "relationships": {
-                    "programmes": {
-                        "data": [
-                            {
-                                "id": "27",
-                                "type": "programmes"
-                            }
-                        ]
-                    },
-                    "organisms": {
-                        "data": [
-                            {
-                                "id": "5",
-                                "type": "organisms"
-                            }
-                        ]
-                    }
+                    "title": title
                 }
             }
         }
-        return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 
+        return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 
     def get_people(self):
         '''
         Return all registered people in the SEEK system.
         '''
-        return requests.get(
-            f'{self.base_url}/people', headers=self.headers)
+        return requests.get(f'{self.base_url}/people', headers=self.headers)
 
-    def create_person(self):
+    def create_person(self, name, email):
         '''
         Create a new person in the SEEK system.
         '''
@@ -100,20 +50,10 @@ class SeekClient:
             "data": {
                 "type": "people",
                 "attributes": {
-                    "first_name": "Post",
-                    "last_name": "Last",
-                    "email": "maxPosttest1154@test.com"
+                    "first_name": name,
+                    "email": email
                 }
             }
         }
 
         return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
-
-
-if __name__ == '__main__':
-    client = SeekClient()
-    # assert (client.get_people().status_code == 200)
-    res = client.create_person()
-    print(res.content)
-    print(res.status_code)
-    # assert (client.create_person().status_code == 201)
