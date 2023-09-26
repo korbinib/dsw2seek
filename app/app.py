@@ -4,7 +4,7 @@ from waitress import serve
 from api.seek import SeekClient
 
 app = Flask(__name__)
-client = SeekClient()
+seek_client = SeekClient()
 
 
 @app.route('/')
@@ -20,11 +20,24 @@ def upload():
     '''
     Upload page.
     '''
-    if request.method == 'POST':
-        file = request.files['jsonFile']
-        y = json.load(file)
-        print(y["createdBy"]["email"])
-    return render_template('./upload.html', error="There was an error uploading your file. Please try again.")
+    if not request.method == 'POST':
+        return render_template('./upload.html', error="Please upload a file.")
+
+    file = request.files['jsonFile']
+    dmp = json.load(file)['dmp']
+
+    # 1. Create a new project
+    res = seek_client.create_project()
+    print(res.status_code)
+
+    # 2. Create users for all contributors
+    for person in dmp['contributor']:
+        name = person['name']
+        email = person['mbox']
+        res = seek_client.create_person(name, email)
+        print(res.status_code)
+
+    return render_template('./upload.html')
 
 
 if __name__ == '__main__':
