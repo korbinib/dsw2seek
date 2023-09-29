@@ -21,7 +21,7 @@ class SeekClient:
             'Content-Type': 'application/vnd.api+json'
         }
 
-    def create_project(self, title):
+    def create_project(self, title, description):
         '''
         Create a new project
         '''
@@ -29,7 +29,8 @@ class SeekClient:
             "data": {
                 "type": "projects",
                 "attributes": {
-                    "title": title
+                    "title": title,
+                    "description": description
                 }
             }
         }
