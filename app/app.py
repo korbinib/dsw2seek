@@ -27,7 +27,7 @@ def upload():
     dmp = json.load(file)['dmp']
 
     # 1. Create a new project
-    res = seek_client.create_project(dmp['title'])
+    res = seek_client.create_project(dmp['title'], [{"person_id" : "1", "institution_id" : "100"}])
     print(res.status_code)
 
     # 2. Create users for all contributors
