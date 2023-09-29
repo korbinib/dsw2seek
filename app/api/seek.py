@@ -21,9 +21,16 @@ class SeekClient:
             'Content-Type': 'application/vnd.api+json'
         }
 
-    def create_project(self, title, ids):
+    def create_project(self, title, people):
         '''
         Create a new project
+
+        Parameters
+        ----------
+        title : string
+            The title of the project
+        people : array containing dictionaries, e.g. [{"person_id" : "1", "institution_id" : "100"}]
+            The people connected to the project 
         '''
         data = {
             "data": {
@@ -35,7 +42,7 @@ class SeekClient:
             }
         }
 
-        for id in ids: data['data']['attributes']['members'].append(id)
+        for person in people: data['data']['attributes']['members'].append(person)
 
         return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 
