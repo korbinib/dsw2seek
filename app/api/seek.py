@@ -43,10 +43,10 @@ class SeekClient:
             }
         }
 
-        for person in people:
-            data['data']['attributes']['members'].append(
-                {'person_id': person[0], 'institution_id': person[1]}
-            )
+        # for person in people:
+        #     data['data']['attributes']['members'].append(
+        #         {'person_id': person[0], 'institution_id': person[1]}
+        #     )
 
         return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 

@@ -17,6 +17,15 @@
         "mbox": "user@test.com",
         "name": "Test User",
         "role": ["contact person", "data steward", "supervisor"]
+      },
+      {
+        "contributor_id": {
+          "identifier": "test",
+          "type": "orcid"
+        },
+        "mbox": "user2@test.com",
+        "name": "Another Test User",
+        "role": ["data steward"]
       }
     ],
     "created": "2023-09-24T17:14:32Z",

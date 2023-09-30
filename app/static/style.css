@@ -56,3 +56,35 @@ input[type="submit"] {
 input[type="submit"]:hover {
     background-color: #0056b3;
 }
+
+/* upload page */
+.flex {
+    flex-direction: column;
+}
+
+.centered {
+    width: 100%;
+    text-align: center;
+}
+
+.accordion {
+    width: 80%;
+    background-color: #eee;
+    color: #444;
+    margin-bottom: 15px;
+    padding: 1.5rem;
+    border-radius: 1.5rem;
+}
+
+.accordion-header > h2 {
+    margin: 0;
+    border-bottom: 1px solid #444;
+}
+
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
