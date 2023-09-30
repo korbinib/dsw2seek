@@ -29,7 +29,7 @@ class SeekClient:
         ----------
         title : string
             The title of the project
-        people : array containing dictionaries, e.g. [{"person_id" : "1", "institution_id" : "100"}]
+        people : array of tuples on the form (person_id, institution_id)
             The people connected to the project 
         '''
         data = {
@@ -42,7 +42,10 @@ class SeekClient:
             }
         }
 
-        for person in people: data['data']['attributes']['members'].append(person)
+        for person in people:
+            data['data']['attributes']['members'].append(
+                {"person_id": person[0], "institution_id": person[1]}
+            )
 
         return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 
