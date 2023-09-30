@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-SEEK_USERNAME = os.environ.get("SEEK_USERNAME")
-SEEK_PASSWORD = os.environ.get("SEEK_PASSWORD")
+SEEK_USERNAME = os.environ.get('SEEK_USERNAME')
+SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
 
 
 class SeekClient:
@@ -21,7 +21,7 @@ class SeekClient:
             'Content-Type': 'application/vnd.api+json'
         }
 
-    def create_project(self, title, people):
+    def create_project(self, title, description, people):
         '''
         Create a new project
 
@@ -33,18 +33,19 @@ class SeekClient:
             The people connected to the project 
         '''
         data = {
-            "data": {
-                "type": "projects",
-                "attributes": {
-                    "title": title,
-                    "members": []
+            'data': {
+                'type': 'projects',
+                'attributes': {
+                    'title': title,
+                    'description': description,
+                    'members': []
                 }
             }
         }
 
         for person in people:
             data['data']['attributes']['members'].append(
-                {"person_id": person[0], "institution_id": person[1]}
+                {'person_id': person[0], 'institution_id': person[1]}
             )
 
         return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
@@ -60,11 +61,11 @@ class SeekClient:
         Create a new person in the SEEK system.
         '''
         data = {
-            "data": {
-                "type": "people",
-                "attributes": {
-                    "first_name": name,
-                    "email": email
+            'data': {
+                'type': 'people',
+                'attributes': {
+                    'first_name': name,
+                    'email': email
                 }
             }
         }

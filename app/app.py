@@ -21,13 +21,14 @@ def upload():
     Upload page.
     '''
     if not request.method == 'POST':
-        return render_template('./upload.html', error="Please upload a file.")
+        return render_template('./upload.html', error='Please upload a file.')
 
     file = request.files['jsonFile']
     dmp = json.load(file)['dmp']
 
     # 1. Create a new project
-    res = seek_client.create_project(dmp['title'], [(1, 1)])
+    res = seek_client.create_project(
+        dmp['title'], dmp['project'][0]['description'], [(1, 1)])
     print(res.status_code)
 
     # 2. Create users for all contributors
