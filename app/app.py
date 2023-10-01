@@ -15,7 +15,7 @@ def index():
     return render_template('./index.html')
 
 
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET', 'POST'])
 def upload():
     '''
     Upload page.
@@ -23,22 +23,30 @@ def upload():
     if not request.method == 'POST':
         return render_template('./upload.html', error='Please upload a file.')
 
-    file = request.files['jsonFile']
-    dmp = json.load(file)['dmp']
+    dmp = load_file(request)
 
-    # 1. Create a new project
+    # 1. Create users for all contributors
+    people = dmp['contributor']
+    for i, person in enumerate(people):
+        res = seek_client.create_person(person['name'], person['mbox'])
+
+        people[i]['response'] = {
+            'status_code': res.status_code, 'json': res.json()}
+
+    # 2. Create a new project
+    project = dmp['project'][0]
     res = seek_client.create_project(
-        dmp['title'], dmp['project'][0]['description'], [(1, 1)])
-    print(res.status_code)
+        project, [(1, 1)])
 
-    # 2. Create users for all contributors
-    for person in dmp['contributor']:
-        name = person['name']
-        email = person['mbox']
-        res = seek_client.create_person(name, email)
-        print(res.status_code)
+    project['response'] = {
+        'status_code': res.status_code, 'json': res.json()}
 
-    return render_template('./upload.html')
+    return render_template('./upload.html', people=people, project=project)
+
+
+def load_file(request):
+    file = request.files['jsonFile']
+    return json.load(file)['dmp']
 
 
 if __name__ == '__main__':
