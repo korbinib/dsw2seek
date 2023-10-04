@@ -21,7 +21,8 @@ class SeekClient:
             'Content-Type': 'application/vnd.api+json'
         }
 
-    def create_project(self, project, people):
+
+    def create_project(self, project, contributors):
         '''
         Create a new project
 
@@ -29,8 +30,8 @@ class SeekClient:
         ----------
         project : dict describing the project drawn from a DMP file
             Metadata for the project
-        people : array of tuples on the form (person_id, institution_id)
-            The people connected to the project
+        contributors : array of dictionaries on the form {'person_id': '1', 'institution_id': '1', 'role':[ ] }
+            The people connected to the project and their roles
         '''
         data = {
             'data': {
@@ -40,18 +41,42 @@ class SeekClient:
                     'description': project['description'],
                     'start_date': project['start'],
                     'end_date': project['end'],
-                    'members': []
+                    'contributors': contributors,
+                    'default_policy': {
+                        'permissions':[]
+                    }
                 }
             }
         }
 
-        # TODO: This crashes when the project already exists
-        # for person in people:
-        #     data['data']['attributes']['members'].append(
-        #         {'person_id': person[0], 'institution_id': person[1]}
-        #     )
+        #Adds permissions based on roles 
 
+        #Permissions are in the form: 
+        # {'person_id':'1', 
+        # 'access': 'manage' }
+        managers = ['data manager', 'data steward','project manager', 'project leader']
+
+        for cont in contributors:
+            is_manager = False
+
+            for role in cont['role']:
+                if role in managers:
+                    is_manager = True
+                    break
+            
+            if is_manager:
+                data['data']['attributes']['default_policy']['permissions'].append({
+                        'person_id': cont['person_id'],
+                        'access': 'manage'
+                    })
+            else:
+                data['data']['attributes']['default_policy']['permissions'].append({
+                        'person_id': cont['person_id'],
+                        'access': 'download'
+                    })
+            
         return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
+
 
     def get_people(self):
         '''
@@ -59,12 +84,14 @@ class SeekClient:
         '''
         return requests.get(f'{self.base_url}/people', headers=self.headers)
 
-    def create_person(self, name, email):
+
+    def create_person(self, id, name, email):
         '''
         Create a new person in the SEEK system.
         '''
         data = {
             'data': {
+                'id':id,
                 'type': 'people',
                 'attributes': {
                     'first_name': name,

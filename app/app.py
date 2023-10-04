@@ -25,18 +25,26 @@ def upload():
 
     dmp = load_file(request)
 
+    contributors = []
+
     # 1. Create users for all contributors
     people = dmp['contributor']
     for i, person in enumerate(people):
-        res = seek_client.create_person(person['name'], person['mbox'])
+        res = seek_client.create_person( person['contributor_id']['identifier'], person['name'], person['mbox'])
+
+        contributors.append( #Appends all created users to the contributor dictionary in create_project
+                {
+                    'person_id': person['contributor_id']['identifier'], #Uses the identifier from dmp as person_id
+                    'institution_id': "PLACEHOLDER",                    #I can't find any values corresponding to institution_id
+                    'role':person['role']
+                 })
 
         people[i]['response'] = {
             'status_code': res.status_code, 'json': res.json()}
 
     # 2. Create a new project
     project = dmp['project'][0]
-    res = seek_client.create_project(
-        project, [(1, 1)])
+    res = seek_client.create_project( project, contributors)
 
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}
