@@ -74,3 +74,12 @@ class SeekClient:
         }
 
         return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
+    
+
+    
+    def get_institutions(self):
+        '''
+        Return all registered institutions in the SEEK system.
+        '''
+        return requests.get(f'{self.base_url}/institutions', headers=self.headers)
+

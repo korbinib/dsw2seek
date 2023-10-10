@@ -12,7 +12,8 @@ def index():
     '''
     Home page.
     '''
-    return render_template('./index.html')
+    institutions = seek_client.get_institutions().json()
+    return render_template('./index.html', institutions=institutions["data"])
 
 
 @app.route('/upload', methods=['GET', 'POST'])
@@ -52,3 +53,12 @@ def load_file(request):
 if __name__ == '__main__':
     print('Server running at http://localhost:8080')
     serve(app, host='0.0.0.0', port=8080)
+
+
+
+
+
+
+
+
+    # "data":[{"id":"1","type":"institutions","attributes":{"title":"Default Institution"},"links":{"self":"/institutions/1"}},{"id":"2","type":"institutions","attributes":{"title":"ne"},"links":{"self":"/institutions/2"}}],
