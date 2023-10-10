@@ -77,9 +77,8 @@ class SeekClient:
     
 
     
-    def get_institutions(self):
+    def institutions_typeahead(self, query):
         '''
         Return all registered institutions in the SEEK system.
         '''
-        return requests.get(f'{self.base_url}/institutions', headers=self.headers)
-
+        return requests.get(f'{self.base_url}/institutions/typeahead?query={query}', headers=self.headers)

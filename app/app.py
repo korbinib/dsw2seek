@@ -7,24 +7,32 @@ app = Flask(__name__)
 seek_client = SeekClient()
 
 
+@app.route('/typeahead')
+def __institutions_typeahead():
+    '''
+    Endpoint for fetching institutions as the user types.
+    '''
+    query = request.args.get('query')
+    res = seek_client.institutions_typeahead(query)
+    return res.json()
+
+
 @app.route('/')
 def index():
     '''
     Home page.
     '''
-    institutions = seek_client.get_institutions().json()
-    return render_template('./index.html', institutions=institutions["data"])
+    return render_template('./index.html')
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST'])
 def upload():
     '''
-    Upload page.
+    Upload page. Processes the uploaded DMP file and creates a new project and users in SEEK.
     '''
-    if not request.method == 'POST':
-        return render_template('./upload.html', error='Please upload a file.')
-
     dmp = load_file(request)
+
+    institution = request.form.get('institutionId')
 
     # 1. Create users for all contributors
     people = dmp['contributor']
@@ -33,11 +41,11 @@ def upload():
 
         people[i]['response'] = {
             'status_code': res.status_code, 'json': res.json()}
-
+   
     # 2. Create a new project
     project = dmp['project'][0]
     res = seek_client.create_project(
-        project, [(1, 1)])
+        project, [(1, institution)])
 
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}
@@ -54,11 +62,3 @@ if __name__ == '__main__':
     print('Server running at http://localhost:8080')
     serve(app, host='0.0.0.0', port=8080)
 
-
-
-
-
-
-
-
-    # "data":[{"id":"1","type":"institutions","attributes":{"title":"Default Institution"},"links":{"self":"/institutions/1"}},{"id":"2","type":"institutions","attributes":{"title":"ne"},"links":{"self":"/institutions/2"}}],
