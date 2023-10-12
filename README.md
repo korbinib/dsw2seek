@@ -37,7 +37,8 @@ docker volume create --name=seek-cache
 Run `docker-compose` in the root directory of this project:
 
 ```
-docker-compose -f docker/docker-compose.yml up
+docker-compose -f docker/docker-compose.seek.yml up
+docker-compose -f docker/docker-compose.dsw.yml up -d
 ```
 
 ### Environment variables
