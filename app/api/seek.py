@@ -85,13 +85,12 @@ class SeekClient:
         return requests.get(f'{self.base_url}/people', headers=self.headers)
 
 
-    def create_person(self, id, name, email):
+    def create_person(self, name, email):
         '''
         Create a new person in the SEEK system.
         '''
         data = {
             'data': {
-                'id':id,
                 'type': 'people',
                 'attributes': {
                     'first_name': name,

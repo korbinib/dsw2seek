@@ -34,8 +34,8 @@ def upload():
 
         contributors.append( #Appends all created users to the contributor dictionary in create_project
                 {
-                    'person_id': person['contributor_id']['identifier'], #Uses the identifier from dmp as person_id
-                    'institution_id': "PLACEHOLDER",                    #I can't find any values corresponding to institution_id
+                    'person_id': "PLACEHOLDER",
+                    'institution_id': "PLACEHOLDER",
                     'role':person['role']
                  })
 
