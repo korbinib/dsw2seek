@@ -6,7 +6,7 @@ services:
     restart: always
     ports:
     # (!!) Expose only for local deployment, externally use HTTPS proxy
-      - 127.0.0.1:3001:3001
+      - 127.0.0.1:3001:3000
     depends_on:
       - postgres
       - minio
@@ -14,15 +14,17 @@ services:
       - ./application.yml:/app/config/application.yml:ro
     extra_hosts:
       - host.docker.internal:host-gateway
+    platform: linux/amd64
 
   dsw-client:
     image: datastewardshipwizard/wizard-client:3.28
     restart: always
     ports:
     # (!!) Expose only for local deployment, externally use HTTPS proxy
-      - 127.0.0.1:8081:8081
+      - 127.0.0.1:8081:8080
     environment:
       API_URL: http://localhost:3001
+    platform: linux/amd64
 
   docworker:
     image: datastewardshipwizard/document-worker:3.28
@@ -35,6 +37,7 @@ services:
       - ./application.yml:/app/config/application.yml:ro
     extra_hosts:
       - host.docker.internal:host-gateway
+    platform: linux/amd64
 
   mailer:
     image: datastewardshipwizard/mailer:3.28
@@ -44,6 +47,7 @@ services:
       - dsw-server
     volumes:
       - ./application.yml:/app/config/application.yml:ro
+    platform: linux/amd64
 
   postgres:
     image: postgres:15.2
@@ -61,6 +65,7 @@ services:
     #  - db-data:/var/lib/postgresql/data
     # OR
     #  - ./db-data/data:/var/lib/postgresql/data
+    platform: linux/amd64
 
   minio:
     image: minio/minio:RELEASE.2022-02-24T22-12-01Z
@@ -79,6 +84,7 @@ services:
     #  - s3-data:/data
     # OR
     #  - ./s3-data/data:/data
+    platform: linux/amd64
 
 # volumes:
 #   db-data:

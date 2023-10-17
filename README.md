@@ -25,20 +25,11 @@ pip install -r requirements.txt
 
 ### Docker
 
-First, create the following 4 volumes in Docker:
-
-```
-docker volume create --name=seek-filestore
-docker volume create --name=seek-mysql-db
-docker volume create --name=seek-solr-data
-docker volume create --name=seek-cache
-```
-
 Run `docker-compose` in the root directory of this project:
 
 ```
-docker-compose -f docker/docker-compose.seek.yml up
-docker-compose -f docker/docker-compose.dsw.yml up -d
+docker-compose -f docker/docker-compose.seek.yml -p seek up
+docker-compose -f docker/docker-compose.dsw.yml -p dsw up -d
 ```
 
 ### Environment variables
