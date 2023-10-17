@@ -1,4 +1,4 @@
-# DSW2Seek
+# dsw2seek
 
 ## Project overview
 
