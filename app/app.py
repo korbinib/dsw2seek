@@ -14,12 +14,40 @@ def index():
     '''
     return render_template('./index.html')
 
+#Må forandre navn på funksjon og link i dsw, men funker nå
+@app.route('/upload2', methods=['POST'])
+def upload2():
+    '''
+    Upload page.
+    '''
 
-@app.route('/upload', methods=['GET', 'POST'])
+    data = json.loads(request.data.decode(encoding='UTF-8'))
+    dmp = data['dmp']
+
+    # 1. Create users for all contributors
+    people = dmp["contributor"]
+    for i, person in enumerate(people):
+        res = seek_client.create_person(person['name'], person['mbox'])
+
+        people[i]['response'] = {
+            'status_code': res.status_code, 'json': res.json()}
+
+    # 2. Create a new project
+    project = dmp['project'][0]
+    res = seek_client.create_project(
+        project, [(1, 1)])
+    
+    project['response'] = {
+        'status_code': res.status_code, 'json': res.json()}
+    
+    return render_template('./upload.html', people=people, project=project)
+
+@app.route('/upload', methods=['POST'])
 def upload():
     '''
     Upload page.
     '''
+    
     if not request.method == 'POST':
         return render_template('./upload.html', error='Please upload a file.')
 
@@ -37,10 +65,10 @@ def upload():
     project = dmp['project'][0]
     res = seek_client.create_project(
         project, [(1, 1)])
-
+    
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}
-
+    
     return render_template('./upload.html', people=people, project=project)
 
 
