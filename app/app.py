@@ -4,7 +4,6 @@ from waitress import serve
 from api.seek import SeekClient
 
 app = Flask(__name__)
-seek_client = SeekClient()
 
 
 @app.route('/')
@@ -23,7 +22,13 @@ def upload():
     if not request.method == 'POST':
         return render_template('./upload.html', error='Please upload a file.')
 
+    #Retrieves username, password and json file
+    username = request.form.get("username")
+    password = request.form.get("password")
     dmp = load_file(request)
+
+    #Instantiating the SeekClinet class with the given username and password
+    seek_client = SeekClient(username = username, passsword = password)
 
     # 1. Create users for all contributors
     people = dmp['contributor']

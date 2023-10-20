@@ -5,15 +5,16 @@ from dotenv import load_dotenv
 
 
 load_dotenv()
-SEEK_USERNAME = os.environ.get('SEEK_USERNAME')
-SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
+
+username = os.environ.get('SEEK_USERNAME')
+password = os.environ.get('SEEK_PASSWORD')
 
 
 class SeekClient:
-    def __init__(self):
+    def __init__(self, username, passsword):
         self.base_url = 'http://localhost:3000'
         auth = base64.b64encode(
-            f"{SEEK_USERNAME}:{SEEK_PASSWORD}".encode()).decode()
+            f"{username}:{password}".encode()).decode()
         self.headers = {
             'Accept': 'application/vnd.api+json',
             'Accept-Charset': 'ISO-8859-1',
