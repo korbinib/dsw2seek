@@ -8,7 +8,7 @@ load_dotenv()
 
 
 class SeekClient:
-    def __init__(self, username, passsword):
+    def __init__(self, username, password):
         self.base_url = 'http://localhost:3000'
         auth = base64.b64encode(
             f"{username}:{password}".encode()).decode()
