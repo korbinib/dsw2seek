@@ -6,9 +6,6 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-username = os.environ.get('SEEK_USERNAME')
-password = os.environ.get('SEEK_PASSWORD')
-
 
 class SeekClient:
     def __init__(self, username, passsword):
