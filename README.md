@@ -42,14 +42,7 @@ docker-compose -f docker/docker-compose.yml up
 
 ### Environment variables
 
-Create a file `.env` in the root directory of the project. Fill in the following variables:
-
-```
-SEEK_USERNAME=<username>
-SEEK_PASSWORD=<password>
-```
-
-These are the credentials for your local instance of Seek running in Docker.
+Create a file `.env` in the root directory of the project.
 
 ## Seek API
 
