@@ -20,11 +20,15 @@ def upload():
     '''
     Upload page.
     '''
+
+    # Check if the request is a POST request
     if not request.method == 'POST':
         return render_template('./upload.html', error='Please upload a file.')
 
+    # Load project json file
     dmp = load_file(request)
 
+    # Check if the file is in the correct format
     if not check_format(dmp):
         return render_template('./upload.html', error='Incorrect file format.')
     else:
@@ -34,7 +38,6 @@ def upload():
     people = dmp['contributor']
     for i, person in enumerate(people):
         res = seek_client.create_person(person['name'], person['mbox'])
-
         people[i]['response'] = {
             'status_code': res.status_code, 'json': res.json()}
 
