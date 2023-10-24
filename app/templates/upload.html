@@ -17,7 +17,9 @@
         <p>
           <!-- Display person as: name (mail) - error -->
           {{person['name']}} ({{person['mbox']}}) - 
-          {% if status // 100 != 2 %}
+          {% if status == 422 %}
+          <span class="error">User {{person['response']['json']['errors'][0]['detail']}}</span>
+          {% elif status // 100 != 2 %}
             <span class="error">Error {{status}}: {{person['response']['json']}}</span>
           {% else %}
             <span class="success">OK!</span>
@@ -35,7 +37,9 @@
         <p>
           {% set status = project['response']['status_code'] %}
           {{project['title']}} - 
-          {% if status // 100 != 2 %}
+          {% if status == 422 %}
+            <span class="error">Project {{project['response']['json']['errors'][0]['detail']}}</span>
+          {% elif status // 100 != 2 %}
             <span class="error">Error {{status}}: {{project['response']['json']}}</span>
           {% else %}
             <span class="success">OK!</span>
