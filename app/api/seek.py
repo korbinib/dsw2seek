@@ -83,14 +83,35 @@ class SeekClient:
         Return all registered people in the SEEK system.
         '''
         return requests.get(f'{self.base_url}/people', headers=self.headers)
+    
+    def get_person(self, id):
+        '''
+        Return the person registered in the SEEK system to tbe specific id.
+        '''
+        return requests.get(f'{self.base_url}/people/{id}', headers=self.headers)
+
+    def create_new_id(self):
+        '''
+        This function intends to get the JSON object containing a list of all the people stored in seek (This is done trough get_people)
+        and aloop trough their id's to make a new unique id and make sure it isn't a duplicate.
+        This code assumes get_people() return a JSON object similar to the response example from listPeople as https://docs.seek4science.org/tech/api/#operation/listPeople
+        '''
+        data = self.get_people()
+
+        ids = [int(item['id']) for item in data['data']] #Creates a list of all id values.
+        largest_id = max(ids)                            #Finds the largest id
+
+        return largest_id + 1                            #Returns the new id
 
 
     def create_person(self, name, email):
         '''
         Create a new person in the SEEK system.
         '''
+        id = self.create_new_id()
         data = {
             'data': {
+                'id': id,
                 'type': 'people',
                 'attributes': {
                     'first_name': name,
@@ -99,4 +120,4 @@ class SeekClient:
             }
         }
 
-        return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
+        return requests.post(f'{self.base_url}/people', headers=self.headers, json=data), id
