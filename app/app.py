@@ -25,6 +25,11 @@ def upload():
 
     dmp = load_file(request)
 
+    if not check_format(dmp):
+        return render_template('./upload.html', error='Incorrect file format.')
+    else:
+        dmp = dmp['dmp']
+
     # 1. Create users for all contributors
     people = dmp['contributor']
     for i, person in enumerate(people):
@@ -43,10 +48,31 @@ def upload():
 
     return render_template('./upload.html', people=people, project=project)
 
-
+# load file function
 def load_file(request):
+    '''
+    Load the JSON file from the request.
+    '''
     file = request.files['jsonFile']
-    return json.load(file)['dmp']
+    return json.load(file)
+
+
+def check_format(file):
+    '''
+    Check if the file is in the correct format.
+    '''
+    try:
+        # Check if the 'dmp' field is present in the JSON data
+        if 'dmp' in file:
+            #JSON file is in the right format with the "dmp" field
+            return True
+        else:
+            #'JSON file is missing the "dmp" field.'
+            return False
+
+    except json.JSONDecodeError:
+        return False
+
 
 
 if __name__ == '__main__':

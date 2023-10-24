@@ -7,47 +7,54 @@
   </head>
   <body class="flex">
     <h1 class="centered">Upload</h1>
-    <div class="accordion">
-      <div class="accordion-header">
-        <h2>Creating users</h2>
-      </div>
-      {% for person in people %}
-      {% set status = person['response']['status_code'] %}
-      <div class="accordion-item">
-        <p>
-          <!-- Display person as: name (mail) - error -->
-          {{person['name']}} ({{person['mbox']}}) - 
-          {% if status == 422 %}
-          <span class="error">User {{person['response']['json']['errors'][0]['detail']}}</span>
-          {% elif status // 100 != 2 %}
-            <span class="error">Error {{status}}: {{person['response']['json']}}</span>
-          {% else %}
-            <span class="success">OK!</span>
-          {% endif %}
-        </p>
-      </div>
-      {% endfor %}
+    {% if error %}
+    <div id="errorForm">
+      <p>{{error}}</p>
     </div>
-
-    <div class="accordion">
-      <div class="accordion-header">
-        <h2>Creating project</h2>
+    {% else %}
+    <div id="correctForm" class="accordion">
+      <div class="accordion">
+        <div class="accordion-header">
+          <h2>Creating users</h2>
+        </div>
+        {% for person in people %}
+        {% set status = person['response']['status_code'] %}
+        <div class="accordion-item">
+          <p>
+            <!-- Display person as: name (mail) - error -->
+            {{person['name']}} ({{person['mbox']}}) - 
+            {% if status == 422 %}
+            <span class="error">User {{person['response']['json']['errors'][0]['detail']}}</span>
+            {% elif status // 100 != 2 %}
+              <span class="error">Error {{status}}: {{person['response']['json']}}</span>
+            {% else %}
+              <span class="success">OK!</span>
+            {% endif %}
+          </p>
+        </div>
+        {% endfor %}
       </div>
-      <div class="accordion-item">
-        <p>
-          {% set status = project['response']['status_code'] %}
-          {{project['title']}} - 
-          {% if status == 422 %}
-            <span class="error">Project {{project['response']['json']['errors'][0]['detail']}}</span>
-          {% elif status // 100 != 2 %}
-            <span class="error">Error {{status}}: {{project['response']['json']}}</span>
-          {% else %}
-            <span class="success">OK!</span>
-          {% endif %}
-        </p>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <h2>Creating project</h2>
+        </div>
+        <div class="accordion-item">
+          <p>
+            {% set status = project['response']['status_code'] %}
+            {{project['title']}} - 
+            {% if status == 422 %}
+              <span class="error">Project {{project['response']['json']['errors'][0]['detail']}}</span>
+            {% elif status // 100 != 2 %}
+              <span class="error">Error {{status}}: {{project['response']['json']}}</span>
+            {% else %}
+              <span class="success">OK!</span>
+            {% endif %}
+          </p>
+        </div>
       </div>
     </div>
-
+    {% endif %}
     <a class="button" href="/">Back to upload form</a>
   </body>
 </html>
