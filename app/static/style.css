@@ -42,7 +42,7 @@ input[type="file"] {
     border-radius: 4px;
 }
 
-input[type="submit"] {
+.button {
     background-color: #007BFF;
     color: #fff;
     border: none;
@@ -51,11 +51,13 @@ input[type="submit"] {
     cursor: pointer;
     display: block; 
     margin: 20px auto; 
+    text-decoration: none;
 }
 
-input[type="submit"]:hover {
+.button:hover {
     background-color: #0056b3;
 }
+
 
 /* upload page */
 .flex {
