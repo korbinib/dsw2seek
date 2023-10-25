@@ -30,11 +30,12 @@ def upload():
     # 1. Create users for all contributors
     people = dmp['contributor']
     for i, person in enumerate(people):
-        res, id = seek_client.create_person( person['contributor_id']['identifier'], person['name'], person['mbox'])
+        res = seek_client.create_person( person['contributor_id']['identifier'], person['name'], person['mbox'])
+        data = res.json()['data']
 
         contributors.append( #Appends all created users to the contributor dictionary in create_project
                 {
-                    'person_id': id,
+                    'person_id': data['id'],
                     'institution_id': "PLACEHOLDER",
                     'role':person['role']
                  })
