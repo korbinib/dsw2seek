@@ -52,6 +52,22 @@ SEEK_PASSWORD=<password>
 
 These are the credentials for your local instance of Seek running in Docker.
 
+### Connect DSW
+
+In DSW, add a new document submission service with the following parameters:
+| Parameter           | Value                       |
+|---------------------|-----------------------------|
+| ID                  | dsw2seek                    |
+| Name                | Seek                        |
+| Supported formats   | dsw:rda-madmp, 1.14.0, JSON |
+| Request method      | POST                        |
+| Request URL         | <dsw2seek url>/upload       |
+| Multipart           | Enabled                     |
+| Multipart File Name | jsonFile                    |
+
+Substitute `<dsw2seek url>` with the URL to your instance of dsw2seek.
+Users can now submit their DMPs to Seek.
+
 ## Seek API
 
 Example request to the Seek API:
