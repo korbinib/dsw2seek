@@ -6,6 +6,16 @@ from api.seek import SeekClient
 app = Flask(__name__)
 
 
+@app.route('/typeahead')
+def __institutions_typeahead():
+    '''
+    Endpoint for fetching institutions as the user types.
+    '''
+    query = request.args.get('query')
+    res = seek_client.institutions_typeahead(query)
+    return res.json()
+
+
 @app.route('/')
 def index():
     '''
@@ -14,21 +24,20 @@ def index():
     return render_template('./index.html')
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST'])
 def upload():
     '''
-    Upload page.
+    Upload page. Processes the uploaded DMP file and creates a new project and users in SEEK.
     '''
-    if not request.method == 'POST':
-        return render_template('./upload.html', error='Please upload a file.')
-
-    #Retrieves username, password and json file
+    # Retrieves username, password and json file
     username = request.form.get("username")
     password = request.form.get("password")
-    dmp = load_file(request)
 
-    #Instantiating the SeekClinet class with the given username and password
-    seek_client = SeekClient(username = username, passsword = password)
+    # Instantiating the SeekClinet class with the given username and password
+    seek_client = SeekClient(username=username, passsword=password)
+
+    dmp = load_file(request)
+    institution = request.form.get('institutionId')
 
     # 1. Create users for all contributors
     people = dmp['contributor']
@@ -41,7 +50,7 @@ def upload():
     # 2. Create a new project
     project = dmp['project'][0]
     res = seek_client.create_project(
-        project, [(1, 1)])
+        project, [(1, institution)])
 
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}

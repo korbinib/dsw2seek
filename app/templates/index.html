@@ -1,27 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <link rel="stylesheet" href="../static/spinner.css" />
+    <title>dsw2seek</title>
+  </head>
+  <body>
+    <h1>Upload project</h1>
+    <form id="uploadForm" action="./upload" method="post" enctype="multipart/form-data">
+      <label for="username">Username:</label>
+      <input type="text" id="usernameId" name="username" required>
+      <br>
+      <label for="password">Password:</label>
+      <input type="password" id="passwordId" name="password" required>
 
-<head>
-  <meta charset="UTF-8" />
-  <link rel="stylesheet" href="../static/style.css" />
-  <title>dsw2seek</title>
+      <label for="jsonFile">Select a JSON file:</label> 
+      <input type="file" id="jsonFileId" name="jsonFile" accept=".json" required>
 
-  <h1>Upload project</h1>
-  <form id="uploadForm" action="./upload" method="post" enctype="multipart/form-data">
-    <label for="username">Username:</label>
-    <input type="text" id="usernameId" name="username" required>
-    <br>
-    <label for="password">Password:</label>
-    <input type="password" id="passwordId" name="password" required>
-    <br>
-    <label for="jsonFile">Select a JSON file:</label>
-    <input type="file" id="jsonFileId" name="jsonFile" accept=".json" required>
-    <br><br>
-    <input type="submit" value="Upload">
-  </form>
+      <br /><br />
 
-</head>
+      <div class="select-box">
+        <div class="options-container"></div>
+        <div class="selected">
+          Select institution
+        </div>
+        <div class="search-box">
+          <input type="text" placeholder="Start typing..." />
+          <div class="spinner"></div>
+        </div>
+      </div>
 
-<body></body>
+      <input id="institutionId" name="institutionId" hidden />
 
+      <br />
+
+      <input type="submit" value="Upload">
+    </form>
+    <script src="../static/script.js"></script>
+  </body>
 </html>

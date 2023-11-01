@@ -72,3 +72,11 @@ class SeekClient:
         }
 
         return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
+    
+
+    
+    def institutions_typeahead(self, query):
+        '''
+        Return all registered institutions in the SEEK system.
+        '''
+        return requests.get(f'{self.base_url}/institutions/typeahead?query={query}', headers=self.headers)
