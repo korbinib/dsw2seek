@@ -55,7 +55,11 @@ In DSW, add a new document submission service with the following parameters:
 | Multipart File Name | jsonFile                    |
 
 Substitute `<dsw2seek url>` with the URL to your instance of dsw2seek.
-Users can now submit their DMPs to Seek.
+Also add a user property called `Seek authorizaton`, and a request header called `Authorizaton` with the value `Basic ${Seek authorization}`.
+
+Every user that wishes to submit their DMP needs to set the value of `Seek authorization` in their submission settings.
+The value should be the base-64 encoding of the text `email:password`, where `email` and `password` are their Seek credentials.
+See https://www.base64encode.org/ for a simple tool for encoding the credentials.
 
 ## Seek API
 

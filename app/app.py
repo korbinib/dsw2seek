@@ -1,4 +1,5 @@
 import json
+import base64
 from flask import Flask, render_template, request, jsonify
 from waitress import serve
 from api.seek import SeekClient
@@ -16,7 +17,9 @@ def __seek_login():
     '''
     global seek_client
     data = request.json
-    seek_client = SeekClient(data['username'], data['password'])
+    credentials = base64.b64encode(
+        f'{data["username"]}:{data["password"]}'.encode()).decode()
+    seek_client = SeekClient(credentials)
     return jsonify({'success': True})
 
 
@@ -72,10 +75,13 @@ def load_file(request):
     but DSW will put it in request.form.
     '''
     if len(request.files) == 0:
+        # This is a request from DSW. Create a Seek client with the given credentials.
+        global seek_client
+        seek_client = SeekClient(
+            request.headers['Authorization'].split(' ')[1])
         file = request.form['jsonFile']
         return json.loads(file)['dmp']
     else:
-        print('here')
         file = request.files['jsonFile']
         return json.load(file)['dmp']
 
