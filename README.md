@@ -41,17 +41,6 @@ docker-compose -f docker/docker-compose.seek.yml -p seek up -d
 docker-compose -f docker/docker-compose.dsw.yml -p dsw up -d
 ```
 
-### Environment variables
-
-Create a file `.env` in the root directory of the project. Fill in the following variables:
-
-```
-SEEK_USERNAME=<username>
-SEEK_PASSWORD=<password>
-```
-
-These are the credentials for your local instance of Seek running in Docker.
-
 ### Connect DSW
 
 In DSW, add a new document submission service with the following parameters:

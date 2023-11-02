@@ -1,19 +1,12 @@
 import requests
-import os
 import base64
-from dotenv import load_dotenv
-
-
-load_dotenv()
-SEEK_USERNAME = os.environ.get('SEEK_USERNAME')
-SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
 
 
 class SeekClient:
-    def __init__(self):
+    def __init__(self, username, password):
         self.base_url = 'http://localhost:3000'
         auth = base64.b64encode(
-            f"{SEEK_USERNAME}:{SEEK_PASSWORD}".encode()).decode()
+            f"{username}:{password}".encode()).decode()
         self.headers = {
             'Accept': 'application/vnd.api+json',
             'Accept-Charset': 'ISO-8859-1',
@@ -74,3 +67,9 @@ class SeekClient:
         }
 
         return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
+
+    def institutions_typeahead(self, query):
+        '''
+        Return all registered institutions in the SEEK system.
+        '''
+        return requests.get(f'{self.base_url}/institutions/typeahead?query={query}', headers=self.headers)

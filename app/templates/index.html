@@ -4,15 +4,46 @@
     <meta charset="UTF-8" />
     <link rel="stylesheet" href="../static/style.css" />
     <title>dsw2seek</title>
-
+  </head>
+  <body>
     <h1>Upload project</h1>
     <form id="uploadForm" action="./upload" method="post" enctype="multipart/form-data">
-      <label for="jsonFile">Select a JSON file:</label> 
-      <input type="file" id="jsonFileId" name="jsonFile" accept=".json" required>
-      <br><br>
-      <input type="submit" value="Upload">
-    </form>
+      <div class="tab active">
+        <h2>Seek credentials</h2>
+        <input type="text" id="username" name="username" placeholder="username" required />
+        <input type="password" id="password" name="password" placeholder="password" required />
+        <p id="login-error" class="error">There was an error when logging in.</p>
 
-  </head>
-  <body></body>
+        <button type="button" id="next-button">Log in</button>
+      </div>
+
+      <div class="tab">
+        <h2>Project details</h2>
+        <label for="jsonFile" class="file-upload">Upload DMP file</label> 
+        <input type="file" id="jsonFileId" name="jsonFile" accept=".json" required>
+
+        <br /><br />
+
+        <div class="select-box">
+          <div class="options-container"></div>
+          <div class="selected">
+            Select institution
+          </div>
+          <div class="search-box">
+            <input type="text" placeholder="Start typing..." />
+            <div class="spinner"></div>
+          </div>
+        </div>
+
+        <input id="institutionId" name="institutionId" hidden />
+
+        <div class="button-group">
+          <button type="button" id="prev-button">Back</button>
+          <button>Upload</button>
+        </div>
+      </div>
+    </form>
+    <script src="../static/login.js"></script>
+    <script src="../static/institutions.js"></script>
+  </body>
 </html>

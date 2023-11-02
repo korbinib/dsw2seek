@@ -1,3 +1,5 @@
+/* ========= General page styles ========= */
+
 body {
     font-family: Arial, sans-serif;
     background-color:  #010d25;
@@ -15,6 +17,16 @@ h1 {
     margin: 5%;
 }
 
+.success {
+    color: green;
+}
+
+.error {
+    color: red;
+}
+
+/* ========= Form ========= */
+
 form {
     background-color: #fff;
     border-radius: 8px;
@@ -28,22 +40,32 @@ form {
     align-items: center; 
 }
 
+#login-error {
+    visibility: hidden;
+}
+
 label {
     display: block;
-    text-align: center; 
+    text-align: center;
     margin-bottom: 5px; 
 }
 
 input[type="file"] {
-    width: 100%;
-    padding: 10px;
-    margin-top: 20px;
-    border: 0.5px solid #ccc;
-    border-radius: 4px;
+    border: 2px solid #003572;
+    border-radius: 8px;
+    padding: 8px;
 }
 
-input[type="submit"] {
-    background-color: #007BFF;
+input[type="text"], input[type="password"] {
+    padding: 8px;
+    border-radius: 8px;
+    margin: 10px;
+    width: 90%;
+    font-size: 1em;
+}
+
+input[type="submit"], input[type="button"], button {
+    background-color: #003572;
     color: #fff;
     border: none;
     border-radius: 4px;
@@ -51,13 +73,161 @@ input[type="submit"] {
     cursor: pointer;
     display: block; 
     margin: 20px auto; 
+    font-size: 1em;
 }
 
-input[type="submit"]:hover {
-    background-color: #0056b3;
+input[type="submit"]:hover, input[type="button"]:hover, button:hover {
+    background-color: #014a9e;
 }
 
-/* upload page */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.button-spinner {
+    display: block;
+    background: url('img/spinner-light.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+}
+
+.tab, .tab.active {
+    padding: 5px;
+}
+
+.tab {
+    display: none;
+}
+
+.tab.active {
+    display: block;
+}
+
+/* ========= Institution selector ========= */
+
+.select-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.select-box .options-container {
+    background: #003572;
+    color: white;
+    max-height: 0;
+    opacity: 0;
+    transition: all 0.4s;
+    border-radius: 8px;
+    overflow: hidden;
+    order: 1;
+    margin-top: 4px;
+    width: 100%;
+}
+
+.selected {
+    background-color: #003572;
+    border-radius: 8px;
+    margin-bottom: 4px;
+    color: white;
+    position: relative;
+    order: 0;
+}
+
+.selected::after {
+    content: '';
+    background: url('img/arrow.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    position: absolute;
+    height: 100%;
+    width: 32px;
+    right: 10px;
+    top: 5px;
+    transition: all 0.4s;
+}
+
+.select-box .options-container.active {
+    max-height: 240px;
+    opacity: 1;
+    overflow-y: scroll;
+}
+
+.select-box .options-container.active + .selected::after {
+    transform: rotateX(180deg);
+    top: -6px;
+}
+
+.select-box .options-container::-webkit-scrollbar {
+    width: 8px;
+    background: #012247;
+    border-radius: 0 8px 8px 0;
+}
+
+.select-box .options-container::-webkit-scrollbar-thumb {
+    background: #014a9e;
+    border-radius: 0 8px 8px 0;
+}
+
+.select-box .option,
+.selected {
+    padding: 12px 24px;
+    cursor: pointer;
+}
+
+.select-box .option:hover {
+    background: #014a9e;
+}
+
+.select-box label {
+    cursor: pointer;
+}
+
+.select-box .option .radio {
+    display: none;
+}
+
+.search-box {
+    width: 100%;
+    margin: none;
+}
+
+.search-box input {
+    width: 80%;
+    padding: 12px 16px;
+    border-radius: 1.1rem;
+    z-index: 100;
+    border: 4px solid #003572;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.4s;
+}
+
+.search-box input:focus {
+    outline: none;
+}
+
+.select-box .options-container.active ~ .search-box input {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.spinner {
+    display: none;
+    background: url('img/spinner.svg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    width: 50px;
+    height: 50px;
+    margin: 0 auto;
+}
+
+/* ========= Upload page ========= */
+
 .flex {
     flex-direction: column;
 }
@@ -79,12 +249,4 @@ input[type="submit"]:hover {
 .accordion-header > h2 {
     margin: 0;
     border-bottom: 1px solid #444;
-}
-
-.success {
-    color: green;
-}
-
-.error {
-    color: red;
 }
