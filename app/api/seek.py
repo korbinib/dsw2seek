@@ -1,26 +1,18 @@
 import requests
-import os
-import base64
-from dotenv import load_dotenv
-
-
-load_dotenv()
-SEEK_USERNAME = os.environ.get('SEEK_USERNAME')
-SEEK_PASSWORD = os.environ.get('SEEK_PASSWORD')
 
 
 class SeekClient:
-    def __init__(self):
+    def __init__(self, credentials):
+        '''
+        Initialize a new Seek client with the given base-64 encoded credentials.
+        '''
         self.base_url = 'http://localhost:3000'
-        auth = base64.b64encode(
-            f"{SEEK_USERNAME}:{SEEK_PASSWORD}".encode()).decode()
         self.headers = {
             'Accept': 'application/vnd.api+json',
             'Accept-Charset': 'ISO-8859-1',
-            'Authorization': f'Basic {auth}',
+            'Authorization': f'Basic {credentials}',
             'Content-Type': 'application/vnd.api+json'
         }
-
 
     def create_project(self, project, contributors):
         '''
@@ -43,18 +35,19 @@ class SeekClient:
                     'end_date': project['end'],
                     'contributors': contributors,
                     'default_policy': {
-                        'permissions':[]
+                        'permissions': []
                     }
                 }
             }
         }
 
-        #Adds permissions based on roles 
+        # Adds permissions based on roles
 
-        #Permissions are in the form: 
-        # {'person_id':'1', 
+        # Permissions are in the form:
+        # {'person_id':'1',
         # 'access': 'manage' }
-        managers = ['data manager', 'data steward','project manager', 'project leader']
+        managers = ['data manager', 'data steward',
+                    'project manager', 'project leader']
 
         for cont in contributors:
             is_manager = False
@@ -63,27 +56,26 @@ class SeekClient:
                 if role in managers:
                     is_manager = True
                     break
-            
+
             if is_manager:
                 data['data']['attributes']['default_policy']['permissions'].append({
-                        'person_id': cont['person_id'],
-                        'access': 'manage'
-                    })
+                    'person_id': cont['person_id'],
+                    'access': 'manage'
+                })
             else:
                 data['data']['attributes']['default_policy']['permissions'].append({
-                        'person_id': cont['person_id'],
-                        'access': 'download'
-                    })
-            
-        return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
+                    'person_id': cont['person_id'],
+                    'access': 'download'
+                })
 
+        return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 
     def get_people(self):
         '''
         Return all registered people in the SEEK system.
         '''
         return requests.get(f'{self.base_url}/people', headers=self.headers)
-    
+
     def get_person(self, id):
         '''
         Return the person registered in the SEEK system to tbe specific id.
@@ -98,11 +90,11 @@ class SeekClient:
         '''
         data = self.get_people()
 
-        ids = [int(item['id']) for item in data['data']] #Creates a list of all id values.
-        largest_id = max(ids)                            #Finds the largest id
+        # Creates a list of all id values.
+        ids = [int(item['id']) for item in data['data']]
+        largest_id = max(ids)  # Finds the largest id
 
-        return largest_id + 1                            #Returns the new id
-
+        return largest_id + 1  # Returns the new id
 
     def create_person(self, name, email):
         '''
@@ -121,3 +113,9 @@ class SeekClient:
         }
 
         return requests.post(f'{self.base_url}/people', headers=self.headers, json=data), id
+
+    def institutions_typeahead(self, query):
+        '''
+        Search for institutions in the Seek system.
+        '''
+        return requests.get(f'{self.base_url}/institutions/typeahead?query={query}', headers=self.headers)
