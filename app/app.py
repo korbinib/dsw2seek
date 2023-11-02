@@ -61,7 +61,7 @@ def upload():
         contributors.append(  # Appends all created users to the contributor dictionary in create_project
             {
                 'person_id': data['id'],
-                'institution_id': "PLACEHOLDER",
+                'institution_id': institution,
                 'role': person['role']
             })
 

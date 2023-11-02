@@ -22,7 +22,7 @@ class SeekClient:
         ----------
         project : dict describing the project drawn from a DMP file
             Metadata for the project
-        contributors : array of dictionaries on the form {'person_id': '1', 'institution_id': '1', 'role':[ ] }
+        contributors : array of dictionaries on the form {'person_id': '1', 'institution_id': '1', 'role':['data steward', 'supervisor'] }
             The people connected to the project and their roles
         '''
         data = {
