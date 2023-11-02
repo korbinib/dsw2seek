@@ -40,10 +40,6 @@ Run `docker-compose` in the root directory of this project:
 docker-compose -f docker/docker-compose.yml up
 ```
 
-### Environment variables
-
-Create a file `.env` in the root directory of the project.
-
 ## Seek API
 
 Example request to the Seek API:

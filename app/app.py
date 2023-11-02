@@ -1,9 +1,23 @@
 import json
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from waitress import serve
 from api.seek import SeekClient
 
 app = Flask(__name__)
+
+# This will be set by the login endpoint below.
+seek_client = None
+
+
+@app.route('/login', methods=['POST'])
+def __seek_login():
+    '''
+    Receive a username and password and use these to log into Seek.
+    '''
+    global seek_client
+    data = request.json
+    seek_client = SeekClient(data['username'], data['password'])
+    return jsonify({'success': True})
 
 
 @app.route('/typeahead')
@@ -29,13 +43,6 @@ def upload():
     '''
     Upload page. Processes the uploaded DMP file and creates a new project and users in SEEK.
     '''
-    # Retrieves username, password and json file
-    username = request.form.get("username")
-    password = request.form.get("password")
-
-    # Instantiating the SeekClinet class with the given username and password
-    seek_client = SeekClient(username=username, passsword=password)
-
     dmp = load_file(request)
     institution = request.form.get('institutionId')
 

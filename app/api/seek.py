@@ -1,10 +1,5 @@
 import requests
-import os
 import base64
-from dotenv import load_dotenv
-
-
-load_dotenv()
 
 
 class SeekClient:
@@ -72,9 +67,7 @@ class SeekClient:
         }
 
         return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
-    
 
-    
     def institutions_typeahead(self, query):
         '''
         Return all registered institutions in the SEEK system.
