@@ -1,4 +1,9 @@
+import os
 import requests
+from dotenv import load_dotenv
+
+load_dotenv()
+SEEK_URL = os.environ.get('SEEK_URL')
 
 
 class SeekClient:
@@ -6,7 +11,7 @@ class SeekClient:
         '''
         Initialize a new Seek client with the given base-64 encoded credentials.
         '''
-        self.base_url = 'http://localhost:3000'
+        self.base_url = SEEK_URL
         self.headers = {
             'Accept': 'application/vnd.api+json',
             'Accept-Charset': 'ISO-8859-1',
