@@ -22,8 +22,11 @@ class SeekClient:
         ----------
         project : dict describing the project drawn from a DMP file
             Metadata for the project
-        contributors : array of dictionaries on the form {'person_id': '1', 'institution_id': '1', 'role':['data steward', 'supervisor'] }
-            The people connected to the project and their roles
+        contributors : array of tuples on the form ( 1, 1, ['data steward', 'supervisor'])
+            The people connected to the project and their roles. 
+            - First index is the person_id.
+            - Second index is the institution_id.
+            - Third index is an array containing the roles of the person. 
         '''
         data = {
             'data': {
@@ -41,30 +44,37 @@ class SeekClient:
             }
         }
 
+
         # Adds permissions based on roles
 
-        # Permissions are in the form:
+        # Permissions are on the form:
         # {'person_id':'1',
         # 'access': 'manage' }
         managers = ['data manager', 'data steward',
                     'project manager', 'project leader']
 
-        for cont in contributors:
+        for person in contributors:
+        # TODO: This crashes when the project already exists
+            data['data']['attributes']['contributors'].append(
+                {'person_id': person[0], 
+                 'institution_id': person[1]}
+                )
+
             is_manager = False
 
-            for role in cont['role']:
+            for role in person['role']:
                 if role in managers:
                     is_manager = True
                     break
 
             if is_manager:
                 data['data']['attributes']['default_policy']['permissions'].append({
-                    'person_id': cont['person_id'],
+                    'person_id': person['person_id'],
                     'access': 'manage'
                 })
             else:
                 data['data']['attributes']['default_policy']['permissions'].append({
-                    'person_id': cont['person_id'],
+                    'person_id': person['person_id'],
                     'access': 'download'
                 })
 
@@ -82,28 +92,12 @@ class SeekClient:
         '''
         return requests.get(f'{self.base_url}/people/{id}', headers=self.headers)
 
-    def create_new_id(self):
-        '''
-        This function intends to get the JSON object containing a list of all the people stored in seek (This is done trough get_people)
-        and aloop trough their id's to make a new unique id and make sure it isn't a duplicate.
-        This code assumes get_people() return a JSON object similar to the response example from listPeople as https://docs.seek4science.org/tech/api/#operation/listPeople
-        '''
-        data = self.get_people()
-
-        # Creates a list of all id values.
-        ids = [int(item['id']) for item in data['data']]
-        largest_id = max(ids)  # Finds the largest id
-
-        return largest_id + 1  # Returns the new id
-
     def create_person(self, name, email):
         '''
         Create a new person in the SEEK system.
         '''
-        id = self.create_new_id()
         data = {
             'data': {
-                'id': id,
                 'type': 'people',
                 'attributes': {
                     'first_name': name,

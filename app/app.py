@@ -59,11 +59,7 @@ def upload():
         data = res.json()['data']
 
         contributors.append(  # Appends all created users to the contributor dictionary in create_project
-            {
-                'person_id': data['id'],
-                'institution_id': institution,
-                'role': person['role']
-            })
+            (data['id'], institution, person['role']))
 
         people[i]['response'] = {
             'status_code': res.status_code, 'json': res.json()}
