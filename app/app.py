@@ -101,7 +101,7 @@ def load_file(request):
 def isDSW(request):
     '''
     Does a quick check for where the file originates from. If its from DSW the
-    request uses form, and therefore will return 0 from 'request.files'.
+    request uses form, and therefore will return 0 from 'len(request.files)'.
     '''
     return len(request.files) == 0
 
