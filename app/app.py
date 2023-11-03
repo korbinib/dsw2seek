@@ -72,7 +72,7 @@ def upload():
         elif res.status_code == 200:
             return render_template('./upload.html', people=people, project=project)
         else:
-            return ('SEEK returned following status: ', responses[res.status_code], res.status_code)
+            return ('SEEK returned following status: '+ responses[res.status_code], res.status_code)
     return render_template('./upload.html', people=people, project=project)
     
 
