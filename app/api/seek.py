@@ -44,7 +44,6 @@ class SeekClient:
             }
         }
 
-
         # Adds permissions based on roles
 
         # Permissions are on the form:
@@ -54,11 +53,11 @@ class SeekClient:
                     'project manager', 'project leader']
 
         for person in contributors:
-        # TODO: This crashes when the project already exists
+            # TODO: This crashes when the project already exists
             data['data']['attributes']['contributors'].append(
-                {'person_id': person[0], 
+                {'person_id': person[0],
                  'institution_id': person[1]}
-                )
+            )
 
             is_manager = False
 
@@ -106,7 +105,7 @@ class SeekClient:
             }
         }
 
-        return requests.post(f'{self.base_url}/people', headers=self.headers, json=data), id
+        return requests.post(f'{self.base_url}/people', headers=self.headers, json=data)
 
     def institutions_typeahead(self, query):
         '''
