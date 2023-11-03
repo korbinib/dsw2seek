@@ -93,6 +93,10 @@ def load_file(request):
 
 
 def success(res):
+    '''
+    Checks if response is valid.
+    Responses with the code 200 will pass.
+    '''
     return res.status_code % 100 == 2
 
 
