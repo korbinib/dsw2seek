@@ -45,7 +45,6 @@ def upload():
     project = dmp['project'][0]
     res = seek_client.create_project(
         project, [(1, 1)])
-
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}
 

@@ -19,14 +19,21 @@
         </div>
         {% for person in people %}
         {% set status = person['response']['status_code'] %}
+
+        {% if person['response']['json'] != None %}
+        {% set errorMsg = person['response']['json']['errors'][0]['detail'] %}
+        {% else %}
+        {% set errorMsg = "Oops! Something went wrong while fetching data. Please try again." %}
+        {% endif %}
+
         <div class="accordion-item">
           <p>
             <!-- Display person as: name (mail) - error -->
             {{person['name']}} ({{person['mbox']}}) - 
             {% if status == 422 %}
-            <span class="error">User {{person['response']['json']['errors'][0]['detail']}}</span>
+            <span class="error">User {{errorMsg}}</span>
             {% elif status // 100 != 2 %}
-              <span class="error">Error {{status}}: {{person['response']['json']}}</span>
+              <span class="error">Error {{status}}: {{errorMsg}}</span>
             {% else %}
               <span class="success">OK!</span>
             {% endif %}
@@ -42,11 +49,18 @@
         <div class="accordion-item">
           <p>
             {% set status = project['response']['status_code'] %}
+
+            {% if  project['response']['json'] != None %}
+            {% set errorMsg = project['response']['json']['errors'][0]['detail'] %}
+            {% else %}
+            {% set errorMsg = "Oops! Something went wrong while fetching data. Please try again." %}
+            {% endif %}
+
             {{project['title']}} - 
             {% if status == 422 %}
-              <span class="error">Project {{project['response']['json']['errors'][0]['detail']}}</span>
+              <span class="error">{{errorMsg}}</span>
             {% elif status // 100 != 2 %}
-              <span class="error">Error {{status}}: {{project['response']['json']}}</span>
+              <span class="error">Error {{status}}: {{errorMsg}}</span>
             {% else %}
               <span class="success">OK!</span>
             {% endif %}
