@@ -17,9 +17,11 @@
         <div class="accordion-header">
           <h2>Creating users</h2>
         </div>
+        <!--Set status to the statuscode of the error-->
         {% for person in people %}
         {% set status = person['response']['status_code'] %}
 
+        <!--Set error message to errors json output else to standard message of error-->
         {% if person['response']['json'] != None %}
         {% set errorMsg = person['response']['json']['errors'][0]['detail'] %}
         {% else %}
@@ -48,8 +50,10 @@
         </div>
         <div class="accordion-item">
           <p>
+            <!--Set status to the statuscode of the error-->
             {% set status = project['response']['status_code'] %}
 
+            <!--Set error message to errors json output else to standard message of error-->
             {% if  project['response']['json'] != None %}
             {% set errorMsg = project['response']['json']['errors'][0]['detail'] %}
             {% else %}
