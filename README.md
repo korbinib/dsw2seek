@@ -41,6 +41,14 @@ docker-compose -f docker/docker-compose.seek.yml -p seek up -d
 docker-compose -f docker/docker-compose.dsw.yml -p dsw up -d
 ```
 
+### Connect Seek
+
+Create a file called `.env` in the root directory of this project. Add the following to the file:
+```
+SEEK_URL=<seek-url>
+```
+Replace `<seek-url>` with the URL of your Seek instance, e.g. `http://localhost:3000` or `https://fairdomhub.org`.
+
 ### Connect DSW
 
 In DSW, add a new document submission service with the following parameters:
