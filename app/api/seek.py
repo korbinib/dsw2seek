@@ -43,6 +43,7 @@ class SeekClient:
                     'end_date': project['end'],
                     'contributors': contributors,
                     'default_policy': {
+                        'access': 'no_access',
                         'permissions': []
                     }
                 }
@@ -52,13 +53,17 @@ class SeekClient:
         # Adds permissions based on roles
 
         # Permissions are on the form:
-        # {'person_id':'1',
-        # 'access': 'manage' }
+        # {
+        #   'resource': {
+        #       'person_id': '1273',
+        #       'type': 'people'
+        #       },
+        #   'access': 'manage' }
         managers = ['data manager', 'data steward',
                     'project manager', 'project leader']
 
         for person in contributors:
-            # TODO: This crashes when the project already exists
+            
             data['data']['attributes']['contributors'].append(
                 {'person_id': person[0],
                  'institution_id': person[1]}
@@ -72,16 +77,24 @@ class SeekClient:
                     break
 
             if is_manager:
-                data['data']['attributes']['default_policy']['permissions'].append({
-                    'person_id': person['person_id'],
+                data['data']['attributes']['default_policy']['permissions'].append(
+                    {
+                    'resource' : {
+                        'id': person['person_id'],
+                        'type': 'people'
+                        },
                     'access': 'manage'
                 })
             else:
-                data['data']['attributes']['default_policy']['permissions'].append({
-                    'person_id': person['person_id'],
+                data['data']['attributes']['default_policy']['permissions'].append(
+                    {
+                    'resource' : {
+                        'id': person['person_id'],
+                        'type': 'people'
+                        },
                     'access': 'download'
                 })
-
+        # TODO: This crashes when the project already exists
         return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 
     def get_people(self):
@@ -89,12 +102,6 @@ class SeekClient:
         Return all registered people in the SEEK system.
         '''
         return requests.get(f'{self.base_url}/people', headers=self.headers)
-
-    def get_person(self, id):
-        '''
-        Return the person registered in the SEEK system to tbe specific id.
-        '''
-        return requests.get(f'{self.base_url}/people/{id}', headers=self.headers)
 
     def create_person(self, name, email):
         '''
