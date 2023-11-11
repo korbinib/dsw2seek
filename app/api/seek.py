@@ -19,7 +19,7 @@ class SeekClient:
             'Content-Type': 'application/vnd.api+json'
         }
 
-    def create_project(self, project, contributors):
+    def create_project(self, project, members):
         '''
         Create a new project
 
@@ -27,7 +27,7 @@ class SeekClient:
         ----------
         project : dict describing the project drawn from a DMP file
             Metadata for the project
-        contributors : array of tuples on the form ( 1, 1, ['data steward', 'supervisor'])
+        members : array of tuples on the form ( 1, 1, ['data steward', 'supervisor'])
             The people connected to the project and their roles. 
             - First index is the person_id.
             - Second index is the institution_id.
@@ -41,7 +41,7 @@ class SeekClient:
                     'description': project['description'],
                     'start_date': project['start'],
                     'end_date': project['end'],
-                    'contributors': contributors,
+                    'members': members,
                     'default_policy': {
                         'access': 'no_access',
                         'permissions': []
@@ -55,14 +55,14 @@ class SeekClient:
         # Permissions are on the form:
         # {
         #   'resource': {
-        #       'person_id': '1273',
+        #       'id': '1273',
         #       'type': 'people'
         #       },
         #   'access': 'manage' }
         managers = ['data manager', 'data steward',
                     'project manager', 'project leader']
 
-        for person in contributors:
+        for person in members:
             
             data['data']['attributes']['contributors'].append(
                 {'person_id': person[0],

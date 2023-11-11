@@ -49,7 +49,7 @@ def upload():
     dmp = load_file(request)
     institution = request.form.get('institutionId')
 
-    contributors = []
+    members = []
 
     # 1. Create users for all contributors
     people = dmp['contributor']
@@ -58,7 +58,7 @@ def upload():
         data = res.json()
 
         if success(res):
-            contributors.append(  # Appends all created users to the contributor dictionary in create_project
+            members.append(  # Appends all created users to the contributor dictionary in create_project
                 (data['data']['id'], institution, person['role']))
 
         people[i]['response'] = {
@@ -66,7 +66,7 @@ def upload():
 
     # 2. Create a new project
     project = dmp['project'][0]
-    res = seek_client.create_project(project, contributors)
+    res = seek_client.create_project(project, members)
 
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}
