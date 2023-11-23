@@ -30,7 +30,7 @@ def __institutions_typeahead():
     '''
     query = request.args.get('query')
     res = seek_client.institutions_typeahead(query)
-    return res.json()
+    return jsonify(res.json())
 
 
 @app.route('/')
