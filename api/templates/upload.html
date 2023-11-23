@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="../static/style.css" />
+    <title>dsw2seek</title>
+  </head>
+  <body class="flex">
+    <h1 class="centered">Upload</h1>
+    {% if error %}
+    <div id="errorForm">
+      <p>{{error}}</p>
+    </div>
+    {% else %}
+    <div id="correctForm" class="accordion">
+      <div class="accordion">
+        <div class="accordion-header">
+          <h2>Creating users</h2>
+        </div>
+        <!--Set status to the statuscode of the error-->
+        {% for person in people %}
+        {% set status = person['response']['status_code'] %}
+
+        <!--Set error message to errors json output else to standard message of error-->
+        {% if person['response']['json'] != None %}
+        {% set errorMsg = person['response']['json']['errors'][0]['detail'] %}
+        {% else %}
+        {% set errorMsg = "Oops! Something went wrong while fetching data. Please try again." %}
+        {% endif %}
+
+        <div class="accordion-item">
+          <p>
+            <!-- Display person as: name (mail) - error -->
+            {{person['name']}} ({{person['mbox']}}) - 
+            {% if status == 422 %}
+            <span class="error">User {{errorMsg}}</span>
+            {% elif status // 100 != 2 %}
+              <span class="error">Error {{status}}: {{errorMsg}}</span>
+            {% else %}
+              <span class="success">OK!</span>
+            {% endif %}
+          </p>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="accordion">
+        <div class="accordion-header">
+          <h2>Creating project</h2>
+        </div>
+        <div class="accordion-item">
+          <p>
+            <!--Set status to the statuscode of the error-->
+            {% set status = project['response']['status_code'] %}
+
+            <!--Set error message to errors json output else to standard message of error-->
+            {% if  project['response']['json'] != None %}
+            {% set errorMsg = project['response']['json']['errors'][0]['detail'] %}
+            {% else %}
+            {% set errorMsg = "Oops! Something went wrong while fetching data. Please try again." %}
+            {% endif %}
+
+            {{project['title']}} - 
+            {% if status == 422 %}
+              <span class="error">{{errorMsg}}</span>
+            {% elif status // 100 != 2 %}
+              <span class="error">Error {{status}}: {{errorMsg}}</span>
+            {% else %}
+              <span class="success">OK!</span>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    <a class="button" href="/">Back to upload form</a>
+  </body>
+</html>

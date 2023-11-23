@@ -1,10 +1,15 @@
 import json
 import base64
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from waitress import serve
-from api.seek import SeekClient
+
+import sys
+sys.path.append(".")
+from seek.client import SeekClient
 
 app = Flask(__name__)
+cors = CORS(app, resources={r'/*': {'origins': '*'}})
 
 # This will be set by the login endpoint below.
 seek_client = None
@@ -30,7 +35,7 @@ def __institutions_typeahead():
     '''
     query = request.args.get('query')
     res = seek_client.institutions_typeahead(query)
-    return res.json()
+    return jsonify(res.json())
 
 
 @app.route('/')
@@ -53,7 +58,6 @@ def upload():
     people = dmp['contributor']
     for i, person in enumerate(people):
         res = seek_client.create_person(person['name'], person['mbox'])
-
         people[i]['response'] = {
             'status_code': res.status_code, 'json': res.json()}
 
@@ -66,6 +70,8 @@ def upload():
         'status_code': res.status_code, 'json': res.json()}
 
     return render_template('./upload.html', people=people, project=project)
+
+# load file function
 
 
 def load_file(request):
