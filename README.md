@@ -1,4 +1,4 @@
-# DSW2Seek
+# dsw2seek
 
 ## Project overview
 
@@ -34,22 +34,40 @@ docker volume create --name=seek-solr-data
 docker volume create --name=seek-cache
 ```
 
-Run `docker-compose` in the root directory of this project:
+Then run `docker-compose` in the root directory of this project:
 
 ```
-docker-compose -f docker/docker-compose.yml up
+docker-compose -f docker/docker-compose.seek.yml -p seek up -d
+docker-compose -f docker/docker-compose.dsw.yml -p dsw up -d
 ```
 
-### Environment variables
+### Connect Seek
 
-Create a file `.env` in the root directory of the project. Fill in the following variables:
-
+Create a file called `.env` in the root directory of this project. Add the following to the file:
 ```
-SEEK_USERNAME=<username>
-SEEK_PASSWORD=<password>
+SEEK_URL=<seek-url>
 ```
+Replace `<seek-url>` with the URL of your Seek instance, e.g. `http://localhost:3000` or `https://fairdomhub.org`.
 
-These are the credentials for your local instance of Seek running in Docker.
+### Connect DSW
+
+In DSW, add a new document submission service with the following parameters:
+| Parameter           | Value                       |
+|---------------------|-----------------------------|
+| ID                  | dsw2seek                    |
+| Name                | Seek                        |
+| Supported formats   | dsw:rda-madmp, 1.14.0, JSON |
+| Request method      | POST                        |
+| Request URL         | <dsw2seek url>/upload       |
+| Multipart           | Enabled                     |
+| Multipart File Name | jsonFile                    |
+
+Substitute `<dsw2seek url>` with the URL to your instance of dsw2seek.
+Also add a user property called `Seek authorizaton`, and a request header called `Authorizaton` with the value `Basic ${Seek authorization}`.
+
+Every user that wishes to submit their DMP needs to set the value of `Seek authorization` in their submission settings.
+The value should be the base-64 encoding of the text `email:password`, where `email` and `password` are their Seek credentials.
+See https://www.base64encode.org/ for a simple tool for encoding the credentials.
 
 ## Seek API
 

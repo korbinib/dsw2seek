@@ -1,10 +1,36 @@
 import json
-from flask import Flask, render_template, request
+import base64
+from flask import Flask, render_template, request, jsonify
 from waitress import serve
 from api.seek import SeekClient
 
 app = Flask(__name__)
-seek_client = SeekClient()
+
+# This will be set by the login endpoint below.
+seek_client = None
+
+
+@app.route('/login', methods=['POST'])
+def __seek_login():
+    '''
+    Receive a username and password and use these to log into Seek.
+    '''
+    global seek_client
+    data = request.json
+    credentials = base64.b64encode(
+        f'{data["username"]}:{data["password"]}'.encode()).decode()
+    seek_client = SeekClient(credentials)
+    return jsonify({'success': True})
+
+
+@app.route('/typeahead')
+def __institutions_typeahead():
+    '''
+    Endpoint for fetching institutions as the user types.
+    '''
+    query = request.args.get('query')
+    res = seek_client.institutions_typeahead(query)
+    return res.json()
 
 
 @app.route('/')
@@ -15,24 +41,13 @@ def index():
     return render_template('./index.html')
 
 
-@app.route('/upload', methods=['GET', 'POST'])
+@app.route('/upload', methods=['POST'])
 def upload():
     '''
-    Upload page.
+    Upload page. Processes the uploaded DMP file and creates a new project and users in SEEK.
     '''
-
-    # Check if the request is a POST request
-    if not request.method == 'POST':
-        return render_template('./upload.html', error='Please upload a file.')
-
-    # Load project json file
     dmp = load_file(request)
-
-    # Check if the file is in the correct format
-    if not check_format(dmp):
-        return render_template('./upload.html', error='Incorrect file format.')
-    else:
-        dmp = dmp['dmp']
+    institution = request.form.get('institutionId')
 
     # 1. Create users for all contributors
     people = dmp['contributor']
@@ -44,37 +59,32 @@ def upload():
     # 2. Create a new project
     project = dmp['project'][0]
     res = seek_client.create_project(
-        project, [(1, 1)])
+        project, [(1, institution)])
+
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}
 
     return render_template('./upload.html', people=people, project=project)
 
 # load file function
+
+
 def load_file(request):
     '''
-    Load the JSON file from the request.
+    Account for different ways of sending the file.
+    Requests from this website will put the file in request.files,
+    but DSW will put it in request.form.
     '''
-    file = request.files['jsonFile']
-    return json.load(file)
-
-
-def check_format(file):
-    '''
-    Check if the file is in the correct format.
-    '''
-    try:
-        # Check if the 'dmp' field is present in the JSON data
-        if 'dmp' in file:
-            #JSON file is in the right format with the "dmp" field
-            return True
-        else:
-            #'JSON file is missing the "dmp" field.'
-            return False
-
-    except json.JSONDecodeError:
-        return False
-
+    if len(request.files) == 0:
+        # This is a request from DSW. Create a Seek client with the given credentials.
+        global seek_client
+        seek_client = SeekClient(
+            request.headers['Authorization'].split(' ')[1])
+        file = request.form['jsonFile']
+        return json.loads(file)['dmp']
+    else:
+        file = request.files['jsonFile']
+        return json.load(file)['dmp']
 
 
 if __name__ == '__main__':
