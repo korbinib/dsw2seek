@@ -22,7 +22,7 @@
         {% set status = person['response']['status_code'] %}
 
         <!--Set error message to errors json output else to standard message of error-->
-        {% if person['response']['json'] != None %}
+        {% if person['response']['json'] != None and 'errors' in person['response']['json'] %}
         {% set errorMsg = person['response']['json']['errors'][0]['detail'] %}
         {% else %}
         {% set errorMsg = "Oops! Something went wrong while fetching data. Please try again." %}
@@ -54,7 +54,7 @@
             {% set status = project['response']['status_code'] %}
 
             <!--Set error message to errors json output else to standard message of error-->
-            {% if  project['response']['json'] != None %}
+            {% if  project['response']['json'] != None and 'errors' in project['response']['json'] %}
             {% set errorMsg = project['response']['json']['errors'][0]['detail'] %}
             {% else %}
             {% set errorMsg = "Oops! Something went wrong while fetching data. Please try again." %}

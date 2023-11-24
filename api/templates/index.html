@@ -43,6 +43,10 @@
         </div>
       </div>
     </form>
+    <script>
+      const LOGIN_URL = "{{ url_for('__seek_login') }}";
+      const TYPEAHEAD_URL = "{{ url_for('__institutions_typeahead') }}";
+    </script>
     <script src="../static/login.js"></script>
     <script src="../static/institutions.js"></script>
   </body>
