@@ -1,3 +1,5 @@
 Flask
+flask-cors
 waitress
+requests
 python-dotenv

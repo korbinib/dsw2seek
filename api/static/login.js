@@ -46,7 +46,7 @@ const login = async () => {
     const password = document.querySelector('#password').value;
     const data = {username, password}
 
-    return await fetch('http://localhost:8080/login', {
+    return await fetch(LOGIN_URL, {
             method: 'POST',
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(data)

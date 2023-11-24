@@ -1,10 +1,15 @@
 import json
 import base64
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from waitress import serve
-from api.seek import SeekClient
+
+import sys
+sys.path.append(".")
+from seek.client import SeekClient
 
 app = Flask(__name__)
+cors = CORS(app, resources={r'/*': {'origins': '*'}})
 
 # This will be set by the login endpoint below.
 seek_client = None

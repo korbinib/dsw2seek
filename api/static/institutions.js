@@ -43,7 +43,7 @@ searchBox.addEventListener('keyup', async event => {
  */
 const fetchInstitutions = async event => {
     const query = event.target.value.toLowerCase();
-    const res = await fetch(`http://localhost:8080/typeahead?query=${query}`);
+    const res = await fetch(`${TYPEAHEAD_URL}?query=${query}`);
     const data = await res.json();
     spinner.style.display = 'none';
 
