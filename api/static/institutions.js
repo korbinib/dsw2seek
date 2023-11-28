@@ -44,12 +44,14 @@ searchBox.addEventListener('keyup', async event => {
 const fetchInstitutions = async event => {
     const query = event.target.value.toLowerCase();
     const res = await fetch(`${TYPEAHEAD_URL}?query=${query}`);
-    const data = await res.json();
+    let data = await res.json();
     spinner.style.display = 'none';
 
-    for (let institution of data) {
+    if ('results' in data) // in production, the returned institutions are wrapped in 'results' for some reason.
+        data = data['results'];
+
+    for (let institution of data)
         createOption(institution);
-    }
 }
 
 /**
@@ -57,7 +59,7 @@ const fetchInstitutions = async event => {
  */
 const createOption = institution => {
     const id = institution['id'];
-    const name = institution['name'];
+    const name = institution['name'] ?? institution['text']; // Different Seek instances use either 'name' or 'text'.
 
     institutions.push({id, name});
 

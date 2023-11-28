@@ -9,7 +9,7 @@ sys.path.append(".")
 from seek.client import SeekClient
 
 app = Flask(__name__)
-cors = CORS(app, resources={r'/*': {'origins': '*'}})
+cors = CORS(app, resources={r'\/(login|typeahead)': {'origins': '*'}})
 
 # This will be set by the login endpoint below.
 seek_client = None
