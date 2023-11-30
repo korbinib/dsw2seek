@@ -35,7 +35,7 @@ class SeekClient:
                 'type': 'projects',
                 'attributes': {
                     'title': project['title'],
-                    'description': project.get('description', "None"),
+                    'description': project.get('description', None),
                     'start_date': project['start'],
                     'end_date': project['end'],
                     'members': []
