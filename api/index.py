@@ -53,23 +53,26 @@ def upload():
     '''
     dmp = load_file(request)
     institution = request.form.get('institutionId')
+    
+    try:
+        # 1. Create users for all contributors
+        people = dmp['contributor']
+        for i, person in enumerate(people):
+            res = seek_client.create_person(person['name'], person['mbox'])
+            people[i]['response'] = {
+                'status_code': res.status_code, 'json': res.json()}
 
-    # 1. Create users for all contributors
-    people = dmp['contributor']
-    for i, person in enumerate(people):
-        res = seek_client.create_person(person['name'], person['mbox'])
-        people[i]['response'] = {
+        # 2. Create a new project
+        project = dmp['project'][0]
+        res = seek_client.create_project(
+            project, [(1, institution)])
+
+        project['response'] = {
             'status_code': res.status_code, 'json': res.json()}
 
-    # 2. Create a new project
-    project = dmp['project'][0]
-    res = seek_client.create_project(
-        project, [(1, institution)])
-
-    project['response'] = {
-        'status_code': res.status_code, 'json': res.json()}
-
-    return render_template('./upload.html', people=people, project=project)
+        return render_template('./upload.html', people=people, project=project)
+    except Exception as e:
+        return render_template('./upload.html', error="An error accured. Check the file format.")
 
 # load file function
 
@@ -80,16 +83,20 @@ def load_file(request):
     Requests from this website will put the file in request.files,
     but DSW will put it in request.form.
     '''
-    if len(request.files) == 0:
-        # This is a request from DSW. Create a Seek client with the given credentials.
-        global seek_client
-        seek_client = SeekClient(
-            request.headers['Authorization'].split(' ')[1])
-        file = request.form['jsonFile']
-        return json.loads(file)['dmp']
-    else:
-        file = request.files['jsonFile']
-        return json.load(file)['dmp']
+    try:
+        if len(request.files) == 0:
+            # This is a request from DSW. Create a Seek client with the given credentials.
+            global seek_client
+            seek_client = SeekClient(
+                request.headers['Authorization'].split(' ')[1])
+            file = request.form['jsonFile']
+            return json.loads(file)['dmp']
+        else:
+            file = request.files['jsonFile']
+            return json.load(file)['dmp']
+    except Exception as e:
+        print(e)
+        return True
 
 
 if __name__ == '__main__':
