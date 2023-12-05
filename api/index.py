@@ -35,7 +35,7 @@ def __institutions_typeahead():
     '''
     query = request.args.get('query')
     res = seek_client.institutions_typeahead(query)
-    return res.json()
+    return jsonify(res.json())
 
 
 @app.route('/')
@@ -55,27 +55,32 @@ def upload():
     institution = request.form.get('institutionId')
     members = []
 
-    # 1. Create users for all contributors
-    people = dmp['contributor']
-    for i, person in enumerate(people):
-        res = seek_client.create_person(person['name'], person['mbox'])
-        data = res.json()
+    try:
+        # 1. Create users for all contributors
+        people = dmp['contributor']
+        for i, person in enumerate(people):
+            res = seek_client.create_person(person['name'], person['mbox'])
+            data = res.json()
+            
+            if success(res):
+                members.append(  # Appends all created users to the contributor dictionary in create_project
+                    (data['data']['id'], institution, person['role']))
+            
+            people[i]['response'] = {
+                'status_code': res.status_code, 'json': data}
 
-        if success(res):
-            members.append(  # Appends all created users to the contributor dictionary in create_project
-                (data['data']['id'], institution, person['role']))
+        # 2. Create a new project
+        project = dmp['project'][0]
+        res = seek_client.create_project(project, members)
 
-        people[i]['response'] = {
-            'status_code': res.status_code, 'json': data}
+        project['response'] = {
+            'status_code': res.status_code, 'json': res.json()}
 
-    # 2. Create a new project
-    project = dmp['project'][0]
-    res = seek_client.create_project(project, members)
+        return render_template('./upload.html', people=people, project=project)
+    except Exception as e:
+        return render_template('./upload.html', error="An error accured. Check the file format.")
 
-    project['response'] = {
-        'status_code': res.status_code, 'json': res.json()}
-
-    return render_template('./upload.html', people=people, project=project)
+# load file function
 
 
 def load_file(request):
@@ -84,17 +89,20 @@ def load_file(request):
     Requests from this website will put the file in request.files,
     but DSW will put it in request.form.
     '''
-    if len(request.files) == 0:
-        # This is a request from DSW. Create a Seek client with the given credentials.
-        global seek_client
-        seek_client = SeekClient(
-            request.headers['Authorization'].split(' ')[1])
-        file = request.form['jsonFile']
-        return json.loads(file)['dmp']
-    else:
-        file = request.files['jsonFile']
-        return json.load(file)['dmp']
-
+    try:
+        if len(request.files) == 0:
+            # This is a request from DSW. Create a Seek client with the given credentials.
+            global seek_client
+            seek_client = SeekClient(
+                request.headers['Authorization'].split(' ')[1])
+            file = request.form['jsonFile']
+            return json.loads(file)['dmp']
+        else:
+            file = request.files['jsonFile']
+            return json.load(file)['dmp']
+    except Exception as e:
+        print(e)
+        return True
 
 def success(res):
     '''
@@ -102,7 +110,6 @@ def success(res):
     Responses with the code 200 will pass.
     '''
     return res.status_code % 100 == 2
-
 
 if __name__ == '__main__':
     print('Server running at http://localhost:8080')
