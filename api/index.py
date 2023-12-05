@@ -1,10 +1,15 @@
 import json
 import base64
 from flask import Flask, render_template, request, jsonify
+from flask_cors import CORS
 from waitress import serve
+
+import sys
+sys.path.append(".")
 from seek.client import SeekClient
 
 app = Flask(__name__)
+cors = CORS(app, resources={r'\/(login|typeahead)': {'origins': '*'}})
 
 # This will be set by the login endpoint below.
 seek_client = None
@@ -48,19 +53,24 @@ def upload():
     '''
     dmp = load_file(request)
     institution = request.form.get('institutionId')
+    members = []
 
     # 1. Create users for all contributors
     people = dmp['contributor']
     for i, person in enumerate(people):
         res = seek_client.create_person(person['name'], person['mbox'])
+        data = res.json()
+
+        if success(res):
+            members.append(  # Appends all created users to the contributor dictionary in create_project
+                (data['data']['id'], institution, person['role']))
 
         people[i]['response'] = {
-            'status_code': res.status_code, 'json': res.json()}
+            'status_code': res.status_code, 'json': data}
 
     # 2. Create a new project
     project = dmp['project'][0]
-    res = seek_client.create_project(
-        project, [(1, institution)])
+    res = seek_client.create_project(project, members)
 
     project['response'] = {
         'status_code': res.status_code, 'json': res.json()}
@@ -84,6 +94,14 @@ def load_file(request):
     else:
         file = request.files['jsonFile']
         return json.load(file)['dmp']
+
+
+def success(res):
+    '''
+    Checks if response is valid.
+    Responses with the code 200 will pass.
+    '''
+    return res.status_code % 100 == 2
 
 
 if __name__ == '__main__':

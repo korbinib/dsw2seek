@@ -41,7 +41,9 @@ class SeekClient:
                     'description': project.get('description', None),
                     'start_date': project['start'],
                     'end_date': project['end'],
-                    'members': members,
+                    'members': {
+                        'data': members
+                    },
                     'default_policy': {
                         'access': 'no_access',
                         'permissions': []
@@ -55,7 +57,7 @@ class SeekClient:
         # Permissions are on the form:
         # {
         #   'resource': {
-        #       'id': '1273',
+        #       'id': '1',
         #       'type': 'people'
         #       },
         #   'access': 'manage' }
@@ -94,7 +96,6 @@ class SeekClient:
                         },
                     'access': 'download'
                 })
-        # TODO: This crashes when the project already exists
         return requests.post(f'{self.base_url}/projects', headers=self.headers, json=data)
 
     def get_people(self):
