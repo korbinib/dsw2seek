@@ -64,7 +64,7 @@ input[type="text"], input[type="password"] {
     font-size: 1em;
 }
 
-input[type="submit"], input[type="button"], button {
+input[type="submit"], input[type="button"], button, .button {
     background-color: #003572;
     color: #fff;
     border: none;
@@ -74,9 +74,10 @@ input[type="submit"], input[type="button"], button {
     display: block; 
     margin: 20px auto; 
     font-size: 1em;
+    text-decoration: none;
 }
 
-input[type="submit"]:hover, input[type="button"]:hover, button:hover {
+input[type="submit"]:hover, input[type="button"]:hover, button:hover, .button:hover {
     background-color: #014a9e;
 }
 
