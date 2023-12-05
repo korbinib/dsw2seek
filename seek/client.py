@@ -41,9 +41,7 @@ class SeekClient:
                     'description': project.get('description', None),
                     'start_date': project['start'],
                     'end_date': project['end'],
-                    'members': {
-                        'data': members
-                    },
+                    'members': [],
                     'default_policy': {
                         'access': 'no_access',
                         'permissions': []
@@ -66,14 +64,15 @@ class SeekClient:
 
         for person in members:
             
-            data['data']['attributes']['contributors'].append(
+            data['data']['attributes']['members'].append( #Appends the information in members parameter into members arr
                 {'person_id': person[0],
-                 'institution_id': person[1]}
+                 'institution_id': person[1],
+                 'roles': person[2]}
             )
 
             is_manager = False
 
-            for role in person['role']:
+            for role in person[2]:
                 if role in managers:
                     is_manager = True
                     break
@@ -82,7 +81,7 @@ class SeekClient:
                 data['data']['attributes']['default_policy']['permissions'].append(
                     {
                     'resource' : {
-                        'id': person['person_id'],
+                        'id': person[0],
                         'type': 'people'
                         },
                     'access': 'manage'
@@ -91,7 +90,7 @@ class SeekClient:
                 data['data']['attributes']['default_policy']['permissions'].append(
                     {
                     'resource' : {
-                        'id': person['person_id'],
+                        'id': person[0],
                         'type': 'people'
                         },
                     'access': 'download'

@@ -78,7 +78,7 @@ def upload():
 
         return render_template('./upload.html', people=people, project=project)
     except Exception as e:
-        return render_template('./upload.html', error="An error accured. Check the file format.")
+        return render_template('./upload.html', error=f"An error accured: {e}")
 
 # load file function
 
