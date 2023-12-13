@@ -15,6 +15,13 @@ cors = CORS(app, resources={r'\/(login|typeahead)': {'origins': '*'}})
 # This will be set by the login endpoint below.
 seek_client = None
 
+def isDSW(request):
+    '''
+    Does a quick check for where the file originates from. If its from DSW the
+    request uses form, and therefore will return 0 from 'len(request.files)'.
+    '''
+    return len(request.files) == 0
+
 
 @app.route('/login', methods=['POST'])
 def __seek_login():
@@ -114,10 +121,3 @@ def load_file(request):
 if __name__ == '__main__':
     print('Server running at http://localhost:8080')
     serve(app, host='0.0.0.0', port=8080)
-
-def isDSW(request):
-    '''
-    Does a quick check for where the file originates from. If its from DSW the
-    request uses form, and therefore will return 0 from 'len(request.files)'.
-    '''
-    return len(request.files) == 0
